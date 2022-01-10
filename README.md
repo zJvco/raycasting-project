@@ -1,0 +1,1 @@
+Diretorio instalado o SDL2: /usr/include/SDL2
