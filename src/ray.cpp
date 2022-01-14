@@ -21,14 +21,19 @@ void Ray::setY(float value)
     sy = value;
 }
 
-void Ray::setDirX()
+void Ray::setDirX(float value)
 {
     dx = sx + r * cos(-angle);
 }
 
-void Ray::setDirY()
+void Ray::setDirY(float value)
 {
     dy = sy + r * sin(-angle);
+}
+
+void Ray::setAngle(int angle)
+{
+    this->angle = angle;
 }
 
 void Ray::Draw(SDL_Renderer *renderer, Uint8 r, Uint8 g, Uint8 b, Uint8 a)

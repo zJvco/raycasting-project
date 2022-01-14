@@ -10,15 +10,7 @@
 #include "ray.hpp"
 #include "utils.hpp"
 #include "map.hpp"
-
-typedef struct player
-{
-    int x = WIDTH / 2;
-    int y = HEIGHT / 2;
-    int angle;
-    int dx = cos(angle) * 5;
-    int dy = sin(angle) * 5;
-} Player;
+#include "player.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -62,14 +54,12 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    SDL_Event event;
-
-    Player p;
+    Player p(WIDTH/2, HEIGHT/2, cos(get_radians(p.angle))*5, sin(get_radians(p.angle))*5);
 
     // Criando os raios (objetos)
     std::vector<Ray> rays;
 
-    for (int a = 0; a < WIDTH; a++)
+    for (int a = 0; a < 10; a++)
     {
         Ray ray(p.x, p.y, 0, 0, get_radians(a), 1000);
         rays.push_back(ray);
@@ -86,6 +76,8 @@ int main(int argc, char* argv[])
     SDL_Rect pr;
     pr.w = 15;
     pr.h = 15;
+
+    SDL_Event event;
 
     // Loop principal
     while (run)
@@ -115,30 +107,12 @@ int main(int argc, char* argv[])
                 switch (event.key.keysym.sym)
                 {
                     case SDLK_w:
-                        p.x += p.dx;
-                        p.y += p.dy;
                         break;
                     case SDLK_s:
-                        p.x -= p.dx;
-                        p.y -= p.dy;
                         break;
                     case SDLK_a:
-                        p.angle -= 5;
-                        if (p.angle < 0)
-                        {
-                            p.angle += 360;
-                        }
-                        p.dx = cos(get_radians(p.angle)) * 5;
-                        p.dy = sin(get_radians(p.angle)) * 5;
                         break;
                     case SDLK_d:
-                        p.angle += 5;
-                        if (p.angle > 359)
-                        {
-                            p.angle -= 360;
-                        }
-                        p.dx = cos(get_radians(p.angle)) * 5;
-                        p.dy = sin(get_radians(p.angle)) * 5;
                         break;
                     default:
                         break;
@@ -146,27 +120,23 @@ int main(int argc, char* argv[])
             }
         }
 
+        drawMap2D(renderer, map);
+
+        for (Ray& ray : rays)
+        {
+            ray.setX(pr.x+pr.w/2);
+            ray.setY(pr.y+pr.h/2);
+            ray.setDirX(p.dx);
+            ray.setDirY(p.dy);
+            
+            ray.Draw(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+        }
+
         pr.x = p.x;
         pr.y = p.y;
 
-        drawMap2D(renderer, map);
+        p.draw(renderer, &pr);
 
-        // for (Ray& ray : rays)
-        // {
-        //     ray.setX(p.x);
-        //     ray.setY(p.y);
-        //     ray.setDirX();
-        //     ray.setDirY();
-            
-        //     ray.Draw(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-        // }
-
-        // Player
-        SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE);
-        SDL_RenderFillRect(renderer, &pr);
-
-        SDL_RenderDrawLine(renderer, pr.x, pr.y, pr.x+p.dx*20, pr.y+p.dy*20);
-        
         SDL_RenderPresent(renderer);
 
         // Tempo final do processo realizado acima
