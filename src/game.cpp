@@ -54,14 +54,17 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    Player p(WIDTH/2, HEIGHT/2, cos(get_radians(p.angle))*5, sin(get_radians(p.angle))*5);
+    const int playerWidth = 15;
+    const int playerHeight = 15;
+
+    Player p(WIDTH/2, HEIGHT/2, playerWidth, playerHeight);
 
     // Criando os raios (objetos)
     std::vector<Ray> rays;
 
     for (int a = 0; a < 10; a++)
     {
-        Ray ray(p.x, p.y, 0, 0, get_radians(a), 1000);
+        Ray ray(p.x, p.y, 0, 0, get_radians(a), 200);
         rays.push_back(ray);
     }
 
@@ -72,10 +75,7 @@ int main(int argc, char* argv[])
     floor.w = WIDTH;
     floor.h = HEIGHT;
 
-    // Player Rect
-    SDL_Rect pr;
-    pr.w = 15;
-    pr.h = 15;
+    int mx, my;
 
     SDL_Event event;
 
@@ -111,12 +111,27 @@ int main(int argc, char* argv[])
                     case SDLK_s:
                         break;
                     case SDLK_a:
+                        p.angle -= 1;
+                        if (p.angle < 0)
+                        {
+                            p.angle = 360;
+                        }
                         break;
                     case SDLK_d:
+                        p.angle += 1;
+                        if (p.angle > 360)
+                        {
+                            p.angle = 0;
+                        }
                         break;
                     default:
                         break;
                 }
+            }
+
+            if (event.type == SDL_MOUSEMOTION)
+            {
+                SDL_GetMouseState(&mx, &my);
             }
         }
 
@@ -124,18 +139,15 @@ int main(int argc, char* argv[])
 
         for (Ray& ray : rays)
         {
-            ray.setX(pr.x+pr.w/2);
-            ray.setY(pr.y+pr.h/2);
-            ray.setDirX(p.dx);
-            ray.setDirY(p.dy);
+            ray.setX(p.x+p.w/2);
+            ray.setY(p.y+p.h/2);
+            ray.setDirX(p.angle);
+            ray.setDirY(p.angle);
             
             ray.Draw(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
         }
 
-        pr.x = p.x;
-        pr.y = p.y;
-
-        p.draw(renderer, &pr);
+        p.draw(renderer);
 
         SDL_RenderPresent(renderer);
 

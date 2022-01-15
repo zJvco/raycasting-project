@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include "ray.hpp"
+#include "utils.hpp"
 
 Ray::Ray(float sx, float sy, float dx, float dy, float angle, int r)
 {
@@ -23,17 +24,12 @@ void Ray::setY(float value)
 
 void Ray::setDirX(float value)
 {
-    dx = sx + r * cos(-angle);
+    dx = sx + r * cos(-(angle + get_radians(value)));
 }
 
 void Ray::setDirY(float value)
 {
-    dy = sy + r * sin(-angle);
-}
-
-void Ray::setAngle(int angle)
-{
-    this->angle = angle;
+    dy = sy + r * sin(-(angle + get_radians(value)));
 }
 
 void Ray::Draw(SDL_Renderer *renderer, Uint8 r, Uint8 g, Uint8 b, Uint8 a)

@@ -11,6 +11,5 @@ class Ray
         void setY(float value);
         void setDirX(float value);
         void setDirY(float value);
-        void setAngle(int angle);
         void Draw(SDL_Renderer *renderer, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 };
