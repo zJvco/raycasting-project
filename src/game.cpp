@@ -107,22 +107,30 @@ int main(int argc, char* argv[])
                 switch (event.key.keysym.sym)
                 {
                     case SDLK_w:
+                        p.x += p.dx;
+                        p.y += p.dy;
                         break;
                     case SDLK_s:
+                        p.x -= p.dx;
+                        p.y -= p.dy;
                         break;
                     case SDLK_a:
+                        p.angle += 1;
+                        if (p.angle > 359)
+                        {
+                            p.angle = 0;
+                        }
+                        p.dx = cos(get_radians(p.angle)) * 5;
+                        p.dy = sin(get_radians(p.angle)) * 5;
+                        break;
+                    case SDLK_d:
                         p.angle -= 1;
                         if (p.angle < 0)
                         {
                             p.angle = 360;
                         }
-                        break;
-                    case SDLK_d:
-                        p.angle += 1;
-                        if (p.angle > 360)
-                        {
-                            p.angle = 0;
-                        }
+                        p.dx = cos(get_radians(p.angle)) * 5;
+                        p.dy = sin(get_radians(p.angle)) * 5;
                         break;
                     default:
                         break;
@@ -141,8 +149,11 @@ int main(int argc, char* argv[])
         {
             ray.setX(p.x+p.w/2);
             ray.setY(p.y+p.h/2);
-            ray.setDirX(p.angle);
-            ray.setDirY(p.angle);
+            // ray.setDirX(p.angle);
+            // ray.setDirY(p.angle);aaaa
+            printf("%f\n", ray.angle);
+            ray.dx = p.x + 20 * (p.dx + cos(get_radians(ray.angle)));
+            ray.dy = p.y + 20 * (p.dy + sin(get_radians(ray.angle)));
             
             ray.Draw(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
         }

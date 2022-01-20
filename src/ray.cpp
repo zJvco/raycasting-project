@@ -2,7 +2,7 @@
 #include "ray.hpp"
 #include "utils.hpp"
 
-Ray::Ray(float sx, float sy, float dx, float dy, float angle, int r)
+Ray::Ray(double sx, double sy, double dx, double dy, double angle, int r)
 {
     this->sx = sx;
     this->sy = sy;
@@ -12,22 +12,22 @@ Ray::Ray(float sx, float sy, float dx, float dy, float angle, int r)
     this->r = r;
 }
 
-void Ray::setX(float value)
+void Ray::setX(double value)
 {
     sx = value;
 }
 
-void Ray::setY(float value)
+void Ray::setY(double value)
 {
     sy = value;
 }
 
-void Ray::setDirX(float value)
+void Ray::setDirX(double value)
 {
     dx = sx + r * cos(-(angle + get_radians(value)));
 }
 
-void Ray::setDirY(float value)
+void Ray::setDirY(double value)
 {
     dy = sy + r * sin(-(angle + get_radians(value)));
 }

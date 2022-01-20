@@ -21,5 +21,5 @@ void Player::draw(SDL_Renderer *renderer)
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderFillRect(renderer, &rect);
 
-    // SDL_RenderDrawLine(renderer, rect->x+rect->w/2, rect->y+rect->h/2, rect->x+dx, rect->y+dy);
+    SDL_RenderDrawLine(renderer, rect.x+rect.w/2, rect.y+rect.h/2, rect.x+dx, rect.y+dy);
 }
