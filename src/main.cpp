@@ -1,16 +1,15 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_circle.h>
 #include <iostream>
 #include <math.h>
 #include <vector>
 #include <time.h>
 
-#include "game.hpp"
-#include "ray.hpp"
-#include "utils.hpp"
-#include "map.hpp"
-#include "player.hpp"
+#include "../headers/main.hpp"
+#include "../headers/ray.hpp"
+#include "../headers/utils.hpp"
+#include "../headers/map.hpp"
+#include "../headers/player.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -57,12 +56,12 @@ int main(int argc, char* argv[])
     const int playerWidth = 15;
     const int playerHeight = 15;
 
-    Player p(WIDTH/2, HEIGHT/2, playerWidth, playerHeight);
+    Player p(WIDTH/2, HEIGHT/2, playerWidth, playerHeight, 5);
 
     // Criando os raios (objetos)
     std::vector<Ray> rays;
 
-    for (int a = 0; a < 10; a++)
+    for (int a = 0; a < 60; a++)
     {
         Ray ray(p.x, p.y, 0, 0, get_radians(a), 200);
         rays.push_back(ray);
@@ -107,12 +106,12 @@ int main(int argc, char* argv[])
                 switch (event.key.keysym.sym)
                 {
                     case SDLK_w:
-                        p.x += p.dx;
-                        p.y += p.dy;
+                        p.x += p.dx * p.speed;
+                        p.y += p.dy * p.speed;
                         break;
                     case SDLK_s:
-                        p.x -= p.dx;
-                        p.y -= p.dy;
+                        p.x -= p.dx * p.speed;
+                        p.y -= p.dy * p.speed;
                         break;
                     case SDLK_a:
                         p.angle += 1;
@@ -120,8 +119,8 @@ int main(int argc, char* argv[])
                         {
                             p.angle = 0;
                         }
-                        p.dx = cos(get_radians(p.angle)) * 5;
-                        p.dy = sin(get_radians(p.angle)) * 5;
+                        p.dx = cos(get_radians(p.angle));
+                        p.dy = sin(get_radians(p.angle));
                         break;
                     case SDLK_d:
                         p.angle -= 1;
@@ -129,8 +128,8 @@ int main(int argc, char* argv[])
                         {
                             p.angle = 360;
                         }
-                        p.dx = cos(get_radians(p.angle)) * 5;
-                        p.dy = sin(get_radians(p.angle)) * 5;
+                        p.dx = cos(get_radians(p.angle));
+                        p.dy = sin(get_radians(p.angle));
                         break;
                     default:
                         break;
@@ -143,17 +142,15 @@ int main(int argc, char* argv[])
             }
         }
 
-        drawMap2D(renderer, map);
+        // drawMap2D(renderer, map);
 
         for (Ray& ray : rays)
         {
-            ray.setX(p.x+p.w/2);
-            ray.setY(p.y+p.h/2);
-            // ray.setDirX(p.angle);
-            // ray.setDirY(p.angle);aaaa
-            printf("%f\n", ray.angle);
-            ray.dx = p.x + 20 * (p.dx + cos(get_radians(ray.angle)));
-            ray.dy = p.y + 20 * (p.dy + sin(get_radians(ray.angle)));
+            ray.sx = p.x+p.w/2;
+            ray.sy = p.y+p.h/2;
+
+            ray.dx = ray.sx + ray.r * cos(ray.angle - get_radians(30) + get_radians(p.angle));
+            ray.dy = ray.sy + ray.r * sin(ray.angle - get_radians(30) + get_radians(p.angle));
             
             ray.Draw(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
         }
